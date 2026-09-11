@@ -18,25 +18,27 @@ def form():
 
 
 def save_event(event_content):
+    token = os.environ.get("BLOB_READ_WRITE_TOKEN")
+
+    if not token:
+        raise RuntimeError(
+            "BLOB_READ_WRITE_TOKENが設定されていません"
+        )
+
     event = {
         "id": str(uuid.uuid4()),
         "event": event_content,
     }
 
-    oidc_token = os.environ["VERCEL_OIDC_TOKEN"]
-    store_id = os.environ["BLOB_STORE_ID"]
-
     result = blob_client.put(
         f"events/{event['id']}.json",
         json.dumps(event, ensure_ascii=False).encode("utf-8"),
-        access="private",
+        access="public",
         content_type="application/json",
-        oidc_token=oidc_token,
-        store_id=store_id,
+        token=token,
     )
 
     return event, result
-
 def take_random_event():
     result = blob_client.list(prefix="events/")
     blobs = result.blobs
