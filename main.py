@@ -11,6 +11,14 @@ from discord_webhook import DiscordWebhook
 app = Flask(__name__)
 blob_client = BlobClient()
 
+result = blob_client.put(
+    f"events/{event['id']}.json",
+    json.dumps(event, ensure_ascii=False).encode("utf-8"),
+    access="public",
+    content_type="application/json",
+)
+print(f"Blob uploaded: {result.url}")
+
 
 @app.route("/form.html", methods=["GET"])
 def form():
