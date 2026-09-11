@@ -1,0 +1,94 @@
+<style>
+  .event-form {
+    width: min(100% - 32px, 560px);
+    margin: 40px auto;
+    padding: 28px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
+  }
+
+  .event-form h2 {
+    margin: 0 0 8px;
+    color: #1f2937;
+    font-size: 22px;
+  }
+
+  .event-form p {
+    margin: 0 0 20px;
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  .event-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .event-form textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 14px;
+    box-sizing: border-box;
+    resize: vertical;
+    color: #1f2937;
+    font: inherit;
+    line-height: 1.6;
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .event-form textarea:focus {
+    background: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  .event-form button {
+    width: 100%;
+    margin-top: 18px;
+    padding: 12px 20px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    background: #2563eb;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+  }
+
+  .event-form button:hover {
+    background: #1d4ed8;
+  }
+
+  .event-form button:active {
+    transform: translateY(1px);
+  }
+</style>
+
+<form class="event-form" action="/submit" method="post">
+  <h2>イベントを登録</h2>
+  <p>開催するイベントの内容を入力してください。</p>
+
+  <label for="event-content">イベント内容</label>
+  <textarea
+    id="event-content"
+    name="event_content"
+    placeholder="例：カラオケ"
+    maxlength="1000"
+    required
+  ></textarea>
+
+  <button type="submit">イベントを登録する</button>
+</form>
