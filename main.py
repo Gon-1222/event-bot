@@ -32,7 +32,7 @@ def send_random_event_to_discord():
     event = get_random_event()
     # DiscordにWebhookでイベントを送信する
     webhook_url = "https://discord.com/api/webhooks/your_webhook_url"  # ここにDiscordのWebhook URLを入力してください
-    webhook = DiscordWebhook(url=webhook_url, content=f"今週のイベントは「{event['event']}」です！")
+    webhook = DiscordWebhook(url=webhook_url, content=f"今週のイベントは「{event['event']}」です！\n\nイベントの追加はこちら！↓\nhttps://event-bot-ten.vercel.app/form.html")
     response = webhook.execute()
     if response.status_code != 200:
         return jsonify({"error": "Failed to send event to Discord"}), 500
