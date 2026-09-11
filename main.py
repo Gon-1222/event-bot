@@ -58,7 +58,7 @@ def submit():
 
     event, _ = save_event(event_content)
 
-    return send_from_directory("success.html", "success.html")
+    return send_from_directory(".", "success.html")
 
 
 @app.route("/get_random_event", methods=["GET"])
