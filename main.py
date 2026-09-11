@@ -15,7 +15,7 @@ blob_client = BlobClient()
 @app.route("/form.html", methods=["GET"])
 def form():
     return send_from_directory(".", "form.html")
-
+#submit後ページ
 
 def save_event(event_content):
     event = {
@@ -58,10 +58,7 @@ def submit():
 
     event, _ = save_event(event_content)
 
-    return jsonify({
-        "message": "イベントを登録しました",
-        **event,
-    })
+    return send_from_directory("success.html", "success.html")
 
 
 @app.route("/get_random_event", methods=["GET"])
