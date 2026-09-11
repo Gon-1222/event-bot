@@ -89,7 +89,7 @@ def send_random_event_to_discord():
             content="登録されているイベントがありません",
         )
         webhook.execute()
-        
+
         return jsonify({
             "error": "登録されているイベントがありません"
         }), 404
@@ -104,6 +104,7 @@ def send_random_event_to_discord():
     webhook = DiscordWebhook(
         url=webhook_url,
         content=(
+            "<@1444302300540834015>\n"
             f"今週のイベントは「{event['event']}」です！\n\n"
             "イベントの追加はこちら！↓\n"
             "https://event-bot-ten.vercel.app/form.html"
