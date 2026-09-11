@@ -23,15 +23,19 @@ def save_event(event_content):
         "event": event_content,
     }
 
+    oidc_token = os.environ["VERCEL_OIDC_TOKEN"]
+    store_id = os.environ["BLOB_STORE_ID"]
+
     result = blob_client.put(
         f"events/{event['id']}.json",
         json.dumps(event, ensure_ascii=False).encode("utf-8"),
-        access="public",
+        access="private",
         content_type="application/json",
+        oidc_token=oidc_token,
+        store_id=store_id,
     )
 
     return event, result
-
 
 def take_random_event():
     result = blob_client.list(prefix="events/")
