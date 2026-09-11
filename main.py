@@ -84,6 +84,12 @@ def send_random_event_to_discord():
     event, selected_blob = take_random_event()
 
     if event is None:
+        webhook = DiscordWebhook(
+            url=os.environ.get("DISCORD_WEBHOOK_URL"),
+            content="登録されているイベントがありません",
+        )
+        webhook.execute()
+        
         return jsonify({
             "error": "登録されているイベントがありません"
         }), 404
