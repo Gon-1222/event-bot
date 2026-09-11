@@ -86,7 +86,7 @@ def send_random_event_to_discord():
     if event is None:
         webhook = DiscordWebhook(
             url=os.environ.get("DISCORD_WEBHOOK_URL"),
-            content="登録されているイベントがありません",
+            content=("<@1444302300540834015>\n""登録されているイベントがありません"),
         )
         webhook.execute()
 
