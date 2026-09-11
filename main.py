@@ -18,13 +18,6 @@ def form():
 
 
 def save_event(event_content):
-    token = os.environ.get("BLOB_READ_WRITE_TOKEN")
-
-    if not token:
-        raise RuntimeError(
-            "BLOB_READ_WRITE_TOKENが設定されていません"
-        )
-
     event = {
         "id": str(uuid.uuid4()),
         "event": event_content,
@@ -35,12 +28,12 @@ def save_event(event_content):
         json.dumps(event, ensure_ascii=False).encode("utf-8"),
         access="public",
         content_type="application/json",
-        token=token,
     )
 
     return event, result
+
 def take_random_event():
-    result = blob_client.list(prefix="events/")
+    result = blob_client.list_objects(prefix="events/")
     blobs = result.blobs
 
     if not blobs:
