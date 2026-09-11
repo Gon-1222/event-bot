@@ -6,7 +6,7 @@ blob_client = BlobClient()
 app = Flask(__name__)
 
 
-@app.route('form.html', methods=['GET'])
+@app.route('/form.html', methods=['GET'])
 def form():
     return send_from_directory('.', 'form.html')
 
