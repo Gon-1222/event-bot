@@ -1,14 +1,14 @@
-from flask import Flask, jsonify, request, static_file
+from flask import Flask, jsonify, request, send_from_directory
 from vercel.blob import BlobClient
 from discord_webhook import DiscordWebhook
 
 blob_client = BlobClient()
 app = Flask(__name__)
-    
+
 
 @app.route('form.html', methods=['GET'])
 def form():
-    return static_file('form.html')
+    return send_from_directory('.', 'form.html')
 
 @app.route('/submit', methods=['POST'])
 def submit():
