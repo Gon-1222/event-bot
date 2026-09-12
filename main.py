@@ -4,7 +4,7 @@ import random
 import uuid
 from urllib.request import urlopen
 
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory,render_template
 from vercel.blob import BlobClient
 from discord_webhook import DiscordWebhook
 
@@ -14,7 +14,7 @@ blob_client = BlobClient()
 
 @app.route("/form.html", methods=["GET"])
 def form():
-    return send_from_directory(".", "form.html")
+    return render_template("form.html", events=get_all_events())
 #submit後ページ
 
 def save_event(event_content):
@@ -83,7 +83,7 @@ def send_random_event_to_discord():
     if event is None:
         webhook = DiscordWebhook(
             url=os.environ.get("DISCORD_WEBHOOK_URL"),
-            content=("<@1444302300540834015>\n""登録されているイベントがありません"),
+            content=("<@&&1444302300540834015>\n""登録されているイベントがありません"),
         )
         webhook.execute()
 
@@ -102,7 +102,7 @@ def send_random_event_to_discord():
     webhook = DiscordWebhook(
         url=webhook_url,
         content=(
-            "<@1444302300540834015>\n"
+            "<@&&1444302300540834015>\n"
             f"今週のイベントは「{event['event']}」です！\n"
             f"担当は<@{event['responsible']['ID']}>です。\n"
             "イベントの追加はこちら！↓\n"
@@ -122,6 +122,17 @@ def send_random_event_to_discord():
 
     return jsonify(event)
 
+def get_all_events():
+    result = blob_client.list_objects(prefix="events/")
+    blobs = result.blobs
+
+    events = []
+    for blob in blobs:
+        with urlopen(blob.url) as response:
+            event = json.loads(response.read().decode("utf-8"))
+            events.append(event)
+
+    return events
 
 if __name__ == "__main__":
     app.run(debug=True)

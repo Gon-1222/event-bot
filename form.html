@@ -92,3 +92,10 @@
 
   <button type="submit">イベントを登録する</button>
 </form>
+<!-- 登録済みのイベント -->
+<div>
+  <p>登録済みのイベント：</p>
+  {%for event in events %}
+  <p>{{event}}</p>
+  {%endfor%}
+</div>
