@@ -8,7 +8,7 @@ from flask import Flask, jsonify, request, send_from_directory,render_template
 from vercel.blob import BlobClient
 from discord_webhook import DiscordWebhook
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=".")
 blob_client = BlobClient()
 
 
