@@ -102,7 +102,7 @@ def send_random_event_to_discord():
     webhook = DiscordWebhook(
         url=webhook_url,
         content=(
-            "<@&&1444302300540834015>\n"
+            "<@&1444302300540834015>\n"
             f"今週のイベントは「{event['event']}」です！\n"
             f"担当は<@{event['responsible']['ID']}>です。\n"
             "イベントの追加はこちら！↓\n"
