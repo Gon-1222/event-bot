@@ -16,3 +16,6 @@ ON/OFF状態はVercel Blobに保存され、再起動後も維持されます。
 ローカル起動: Python 3.10以降で pip install -r requirements.txt の後、環境変数を設定して python main.py。http://localhost:5000/manage-events-7f2c9a からアクセスできます。本番はVercelのHTTPSで公開してください。
 
 本変更はファイル作成までで、既存の公開サイトへのデプロイや実際のDiscord投稿は実施していません。
+
+## Basic認証（追加）
+管理画面とその配下の管理APIにはBasic認証が必要です。Vercelの環境変数に ADMIN_USERNAME と ADMIN_PASSWORD を設定して再デプロイしてください。未設定の場合は管理画面を503で閉じます。登録フォームは認証不要です。管理画面へのリンクは登録フォーム右上にあります。Basic認証は必ずHTTPS環境で使用してください。パスワード不要という前述の説明は、この追加仕様で置き換えます。

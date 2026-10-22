@@ -1,6 +1,7 @@
 import json
 import os
 import random
+import secrets
 import uuid
 from urllib.request import urlopen
 from urllib.parse import urlparse
@@ -20,7 +21,7 @@ blob_client = BlobClient()
 
 @app.route("/form.html", methods=["GET"])
 def form():
-    return render_template("form.html", events=get_all_events())
+    return render_template("form.html", events=get_all_events(), admin_base="/" + ADMIN_PATH)
 #submit後ページ
 
 def save_event(event_content):
@@ -158,6 +159,20 @@ def find_event(event_id):
 ADMIN_PATH = os.getenv("ADMIN_PATH", "manage-events-7f2c9a").strip("/")
 if not ADMIN_PATH or "/" in ADMIN_PATH:
     raise ValueError("ADMIN_PATHには空でない単一のパス名を指定してください")
+
+
+@app.before_request
+def require_admin_auth():
+    if request.path == "/" + ADMIN_PATH or request.path.startswith("/" + ADMIN_PATH + "/"):
+        username = os.getenv("ADMIN_USERNAME", "")
+        password = os.getenv("ADMIN_PASSWORD", "")
+        if not username or not password:
+            return jsonify({"error": "管理者認証が未設定です。ADMIN_USERNAMEとADMIN_PASSWORDを設定してください"}), 503
+        auth = request.authorization
+        if (not auth or auth.type.lower() != "basic"
+                or not secrets.compare_digest((auth.username or "").encode(), username.encode())
+                or not secrets.compare_digest((auth.password or "").encode(), password.encode())):
+            return app.response_class("認証が必要です", 401, {"WWW-Authenticate": 'Basic realm="Event Bot Admin", charset="UTF-8"', "Cache-Control": "no-store"})
 
 
 @app.before_request
