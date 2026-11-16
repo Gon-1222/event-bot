@@ -19,15 +19,17 @@ app.config["MAX_CONTENT_LENGTH"] = 16384
 blob_client = BlobClient()
 
 
+@app.route("/", methods=["GET"])
 @app.route("/form.html", methods=["GET"])
 def form():
     return render_template("form.html", events=get_all_events(), admin_base="/" + ADMIN_PATH)
 #submit後ページ
 
-def save_event(event_content):
+def save_event(event_content, name):
     event = {
         "id": str(uuid.uuid4()),
         "event": event_content,
+        "name": name,
     }
 
     result = blob_client.put(
@@ -62,7 +64,11 @@ def submit():
             "error": "イベント内容を入力してください"
         }), 400
 
-    event, _ = save_event(event_content)
+    name = request.form.get("name", "").strip()
+    if not 1 <= len(name) <= 100:
+        return jsonify({"error": "名前は1〜100文字で入力してください"}), 400
+
+    event, _ = save_event(event_content, name)
 
     return send_from_directory(".", "success.html")
 
@@ -109,6 +115,7 @@ def execute_discord():
         content=(
             "<@&1444302300540834015>\n"
             f"今週のイベントは「{event['event']}」です！\n"
+            f"提案者：{event.get('name') or '未登録'}\n"
             f"担当は<@{event['responsible']['ID']}>です。\n"
             "イベントの追加はこちら！↓\n"
             "https://event-bot-ten.vercel.app/form.html"
@@ -237,12 +244,15 @@ def admin_events(event_id=None):
     content = data.get("event", "")
     if not isinstance(content, str) or not 1 <= len(content.strip()) <= 1000:
         return jsonify({"error": "イベント内容は1〜1000文字で入力してください"}), 400
+    name = data.get("name", old_event.get("name", "") if old_blob else "")
+    if not isinstance(name, str) or len(name.strip()) > 100 or (not old_blob and not name.strip()):
+        return jsonify({"error": "名前は1〜100文字で入力してください"}), 400
     if old_blob:
-        event = {"id": event_id, "event": content.strip()}
+        event = {**old_event, "id": event_id, "event": content.strip(), "name": name.strip()}
         blob_client.put("events/" + str(uuid.uuid4()) + ".json", json.dumps(event, ensure_ascii=False).encode("utf-8"), access="public", content_type="application/json")
         blob_client.delete(old_blob.url)
     else:
-        event, _ = save_event(content.strip())
+        event, _ = save_event(content.strip(), name.strip())
     return jsonify(event), 200 if old_blob else 201
 
 
